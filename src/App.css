@@ -47,3 +47,9 @@
     transform: translate(-50%, -50%);
     border: 10px solid black;
 }
+
+.led {
+  height: 30px;
+    width: 50px;
+    background-color: green; 
+}
