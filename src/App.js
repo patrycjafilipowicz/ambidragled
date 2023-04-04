@@ -14,9 +14,9 @@ function App() {
 		const handleWindowMouseMove = event => {
 			console.log(event);
 			const xAvailableSpace =
-				event.pageX > position.left && event.pageX < position.right;
+				event.pageX >= (position.left + 10 + 25) && event.pageX <= (position.right - 10 - 25);
 			const yAvailableSpace =
-				event.pageY > position.top && event.pageY < position.bottom;
+				event.pageY >= (position.top + 10 + 15) && event.pageY <= (position.bottom - 10 -15);
 			if (xAvailableSpace && yAvailableSpace) {
 				setMousePosition({
 					x: event.pageX - position.left,
