@@ -45,6 +45,7 @@ function App() {
 	const mappedAddElement = leds.map((element, index) => {
 		return (
 			<Led
+				isSelected={pickedLedIndex === index}
 				left={
 					pickedLedIndex === index
 						? `${mousePosition.x - initialX}px`
@@ -93,12 +94,13 @@ function App() {
 	);
 }
 
-function Led({ children, onClick, left, top }) {
+function Led({ children, onClick, left, top, isSelected }) {
 	return (
 		<div
 			className='led'
 			onClick={onClick}
-			style={{ left: left, top: top, position: "absolute" }}>
+			style={{ left: left, top: top, position: "absolute", border: isSelected ? "1.5px white dashed" : " "
+			}}>
 			{children}
 		</div>
 	);
