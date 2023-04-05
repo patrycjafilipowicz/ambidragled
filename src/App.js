@@ -11,7 +11,7 @@ const halfLedWidth = 25;
 const halfLedHeight = 15;
 
 function App() {
-	const [leds, setLeds] = useState([{x: initialX, y: initialY }]);
+	const [leds, setLeds] = useState([{ x: initialX, y: initialY }]);
 	// Coordinates are relative to parent box top left corner
 	const [mousePosition, setMousePosition] = useState({ x: zero, y: zero });
 	const [pickedLedIndex, setPickedLedIndex] = useState(null);
@@ -23,9 +23,11 @@ function App() {
 		const handleWindowMouseMove = event => {
 			console.log(event);
 			const xAvailableSpace =
-				event.pageX >= (position.left + border + initialY) && event.pageX <= (position.right - border- initialY);
+				event.pageX >= position.left + border + initialY &&
+				event.pageX <= position.right - border - initialY;
 			const yAvailableSpace =
-				event.pageY >= (position.top + border + halfLedHeight) && event.pageY <= (position.bottom - border -halfLedHeight);
+				event.pageY >= position.top + border + halfLedHeight &&
+				event.pageY <= position.bottom - border - halfLedHeight;
 			if (xAvailableSpace && yAvailableSpace) {
 				setMousePosition({
 					x: event.pageX - position.left,
@@ -42,21 +44,17 @@ function App() {
 
 	const mappedAddElement = leds.map((element, index) => {
 		return (
-			<div
-				style={
+			<Led
+				left={
 					pickedLedIndex === index
-						? {
-								position: "absolute",
-								left: `${mousePosition.x - initialX}px`,
-								top: `${mousePosition.y - initialY}px`,
-						  }
-						: {
-								position: "absolute",
-								left: `${element.x - initialX}px`,
-								top: `${element.y - initialY}px`,
-						  }
+						? `${mousePosition.x - initialX}px`
+						: `${element.x - initialX}px`
 				}
-				className='led'
+				top={
+					pickedLedIndex === index
+						? `${mousePosition.y - initialY}px`
+						: `${element.y - initialY}px`
+				}
 				onClick={() => {
 					setPickedLedIndex(index);
 					const isCurrentLedPicked = index === pickedLedIndex;
@@ -68,7 +66,7 @@ function App() {
 					}
 				}}>
 				{Math.round(element.x)},{Math.round(element.y)}
-			</div>
+			</Led>
 		);
 	});
 
@@ -91,6 +89,17 @@ function App() {
 				}}>
 				Add led
 			</button>
+		</div>
+	);
+}
+
+function Led({ children, onClick, left, top }) {
+	return (
+		<div
+			className='led'
+			onClick={onClick}
+			style={{ left: left, top: top, position: "absolute" }}>
+			{children}
 		</div>
 	);
 }
