@@ -11,11 +11,15 @@ const halfLedWidth = 25;
 const halfLedHeight = 15;
 
 function App() {
-	const [leds, setLeds] = useState([{ x: initialX, y: initialY }]);
+	const [leds, setLeds] = useState([
+		{ x: initialX, y: initialY, height: ledHeight, width: ledWidth },
+	]);
 	// Coordinates are relative to parent box top left corner
 	const [mousePosition, setMousePosition] = useState({ x: zero, y: zero });
 	const [pickedLedIndex, setPickedLedIndex] = useState(null);
 	const screen = useRef();
+	const [initialHandlePosition, setInitialHandlePosition] = useState(null);
+	const [resizedLedIndex, setResizedLedIndex] = useState(null);
 
 	useEffect(() => {
 		const screenRef = screen.current;
@@ -56,7 +60,12 @@ function App() {
 						? `${mousePosition.y - initialY}px`
 						: `${element.y - initialY}px`
 				}
-				onClick={() => {
+				height={
+					resizedLedIndex === index
+					? mousePosition.y
+					: null
+				}
+				onSelect={() => {
 					setPickedLedIndex(index);
 					const isCurrentLedPicked = index === pickedLedIndex;
 					if (isCurrentLedPicked) {
@@ -65,7 +74,13 @@ function App() {
 						);
 						setPickedLedIndex(null);
 					}
-				}}>
+				}}
+				onResize={() => {}}
+				onStartResize={() => {
+					setResizedLedIndex(index);
+					setInitialHandlePosition(mousePosition.y);
+				}}
+				>
 				{Math.round(element.x)},{Math.round(element.y)}
 			</Led>
 		);
@@ -94,13 +109,61 @@ function App() {
 	);
 }
 
-function Led({ children, onClick, left, top, isSelected }) {
+function Led({ children, onSelect, left, top, isSelected, onStartResize, height }) {
 	return (
 		<div
 			className='led'
-			onClick={onClick}
-			style={{ left: left, top: top, position: "absolute", border: isSelected ? "1.5px white dashed" : " "
+			onClick={onSelect}
+			style={{
+				left: left,
+				height: height,
+				top: top,
+				position: "absolute",
+				border: isSelected ? "1.5px white solid" : " ",
 			}}>
+			<div
+				className='handle'
+				style={{
+					position: "absolute",
+					left: "calc(50% - 2.5px)",
+					top: -2.5,
+					backgroundColor: "white",
+					width: 5,
+					height: 5,
+				}}></div>
+			<div
+				onClick={() => {
+					onStartResize()
+				}}
+				className='handle'
+				style={{
+					position: "absolute",
+					left: "calc(50% - 2.5px)",
+					bottom: -2.5,
+					backgroundColor: "white",
+					width: 5,
+					height: 5,
+				}}></div>
+			<div
+				className='handle'
+				style={{
+					position: "absolute",
+					left: -2.5,
+					top: "calc(50% - 2.5px)",
+					backgroundColor: "white",
+					width: 5,
+					height: 5,
+				}}></div>
+			<div
+				className='handle'
+				style={{
+					position: "absolute",
+					right: -2.5,
+					top: "calc(50% - 2.5px)",
+					backgroundColor: "white",
+					width: 5,
+					height: 5,
+				}}></div>
 			{children}
 		</div>
 	);
