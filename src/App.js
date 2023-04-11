@@ -61,9 +61,7 @@ function App() {
 						: `${element.y - initialY}px`
 				}
 				height={
-					resizedLedIndex === index
-					? mousePosition.y
-					: null
+					resizedLedIndex === index ? mousePosition.y - element.y + 14 : null
 				}
 				onSelect={() => {
 					setPickedLedIndex(index);
@@ -75,12 +73,14 @@ function App() {
 						setPickedLedIndex(null);
 					}
 				}}
-				onResize={() => {}}
 				onStartResize={() => {
 					setResizedLedIndex(index);
+					 const isCurrentLedResized = index === resizedLedIndex;
+					 if (isCurrentLedResized) {
+						setResizedLedIndex(null);
+					 }
 					setInitialHandlePosition(mousePosition.y);
-				}}
-				>
+				}}>
 				{Math.round(element.x)},{Math.round(element.y)}
 			</Led>
 		);
@@ -109,7 +109,15 @@ function App() {
 	);
 }
 
-function Led({ children, onSelect, left, top, isSelected, onStartResize, height }) {
+function Led({
+	children,
+	onSelect,
+	left,
+	top,
+	isSelected,
+	onStartResize,
+	height,
+}) {
 	return (
 		<div
 			className='led'
@@ -132,8 +140,9 @@ function Led({ children, onSelect, left, top, isSelected, onStartResize, height 
 					height: 5,
 				}}></div>
 			<div
-				onClick={() => {
-					onStartResize()
+				onClick={event => {
+					onStartResize();
+					event.stopPropagation();
 				}}
 				className='handle'
 				style={{
