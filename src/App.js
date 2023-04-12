@@ -61,24 +61,39 @@ function App() {
 						: `${element.y - initialY}px`
 				}
 				height={
-					resizedLedIndex === index ? mousePosition.y - element.y + 14 : null
+					resizedLedIndex === index
+						? mousePosition.y - element.y + 14
+						: element.height
 				}
 				onSelect={() => {
-					setPickedLedIndex(index);
 					const isCurrentLedPicked = index === pickedLedIndex;
 					if (isCurrentLedPicked) {
 						setLeds(elements =>
-							elements.map((e, i) => (i === index ? mousePosition : e))
+							elements.map((e, i) =>
+								i === index
+									? { ...e, x: mousePosition.x, y: mousePosition.y }
+									: e
+							)
 						);
 						setPickedLedIndex(null);
+					} else {
+						setPickedLedIndex(index);
 					}
 				}}
 				onStartResize={() => {
-					setResizedLedIndex(index);
-					 const isCurrentLedResized = index === resizedLedIndex;
-					 if (isCurrentLedResized) {
+					const isCurrentLedResized = index === resizedLedIndex;
+					if (isCurrentLedResized) {
 						setResizedLedIndex(null);
-					 }
+						setLeds(elements =>
+							elements.map((e, i) =>
+								i === index
+									? { ...e, height: mousePosition.y - element.y + 14 }
+									: e
+							)
+						);
+					} else {
+						setResizedLedIndex(index);
+					}
 					setInitialHandlePosition(mousePosition.y);
 				}}>
 				{Math.round(element.x)},{Math.round(element.y)}
@@ -130,6 +145,7 @@ function Led({
 				border: isSelected ? "1.5px white solid" : " ",
 			}}>
 			<div
+				onClick={event => {}}
 				className='handle'
 				style={{
 					position: "absolute",
