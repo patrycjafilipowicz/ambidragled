@@ -21,6 +21,7 @@ function App() {
 	const [initialHandlePosition, setInitialHandlePosition] = useState(null);
 	const [resizedLedIndex, setResizedLedIndex] = useState(null);
 	const [resizedLedindexRight, setResizedLedindexRight] = useState(null);
+	const [resizedLedIndexLeft, setResizedLedIndexLeft] = useState(null);
 
 	useEffect(() => {
 		const screenRef = screen.current;
@@ -48,14 +49,17 @@ function App() {
 	}, [screen]);
 
 	const mappedAddElement = leds.map((element, index) => {
+		const ledPositionLeft =
+			resizedLedIndexLeft === index
+				? `${mousePosition.x - 8}px`
+				: pickedLedIndex === index
+				? `${mousePosition.x - initialX}px`
+				: `${element.x - initialX}px`;
+
 		return (
 			<Led
 				isSelected={pickedLedIndex === index}
-				left={
-					pickedLedIndex === index
-						? `${mousePosition.x - initialX}px`
-						: `${element.x - initialX}px`
-				}
+				left={ledPositionLeft}
 				top={
 					pickedLedIndex === index
 						? `${mousePosition.y - initialY}px`
@@ -93,7 +97,7 @@ function App() {
 						setLeds(elements =>
 							elements.map((e, i) =>
 								i === index
-									? { ...e, height: (mousePosition.y - element.y + 14) }
+									? { ...e, height: mousePosition.y - element.y + 14 }
 									: e
 							)
 						);
@@ -108,11 +112,28 @@ function App() {
 						setResizedLedindexRight(null);
 						setLeds(elements =>
 							elements.map((e, i) =>
-								i === index ? { ...e, width: (mousePosition.x - element.x + 25) } : e
+								i === index
+									? { ...e, width: mousePosition.x - element.x + 25 }
+									: e
 							)
 						);
 					} else {
 						setResizedLedindexRight(index);
+					}
+				}}
+				onStartResizeLeft={() => {
+					const isCurrentLedResizedLeft = index === resizedLedIndexLeft;
+					if (isCurrentLedResizedLeft) {
+						setResizedLedIndexLeft(null);
+						setLeds(elements =>
+							elements.map((e, i) =>
+								i === index
+									? { ...e, x: mousePosition.x, y: mousePosition.y, width: mousePosition.x - element.x + 25}
+									: e
+							)
+						);
+					} else {
+						setResizedLedIndexLeft(index);
 					}
 				}}>
 				{Math.round(element.x)},{Math.round(element.y)}
@@ -151,6 +172,7 @@ function Led({
 	isSelected,
 	onStartResizeDown,
 	onStartResizeRight,
+	onStartResizeLeft,
 	height,
 	width,
 }) {
@@ -191,6 +213,10 @@ function Led({
 					height: 5,
 				}}></div>
 			<div
+				onClick={event => {
+					onStartResizeLeft();
+					event.stopPropagation();
+				}}
 				className='handle'
 				style={{
 					position: "absolute",
