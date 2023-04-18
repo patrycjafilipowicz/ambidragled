@@ -18,10 +18,11 @@ function App() {
 	const [mousePosition, setMousePosition] = useState({ x: zero, y: zero });
 	const [pickedLedIndex, setPickedLedIndex] = useState(null);
 	const screen = useRef();
-	const [initialHandlePosition, setInitialHandlePosition] = useState(null);
+
 	const [resizedLedIndex, setResizedLedIndex] = useState(null);
 	const [resizedLedindexRight, setResizedLedindexRight] = useState(null);
 	const [resizedLedIndexLeft, setResizedLedIndexLeft] = useState(null);
+	const [resizedLedIndexUp, setResizedLedIndexUp] = useState(null);
 
 	useEffect(() => {
 		const screenRef = screen.current;
@@ -63,6 +64,13 @@ function App() {
 				? mousePosition.x - element.x + 25
 				: element.width;
 
+		const ledHeight =
+			resizedLedIndexUp === index
+				? element.y + mousePosition.y + element.height
+				: resizedLedIndex === index
+				? mousePosition.y - element.y + 14
+				: element.height;
+
 		return (
 			<Led
 				isSelected={pickedLedIndex === index}
@@ -72,11 +80,7 @@ function App() {
 						? `${mousePosition.y - initialY}px`
 						: `${element.y - initialY}px`
 				}
-				height={
-					resizedLedIndex === index
-						? mousePosition.y - element.y + 14
-						: element.height
-				}
+				height={ledHeight}
 				width={ledWidth}
 				onSelect={() => {
 					const isCurrentLedPicked = index === pickedLedIndex;
@@ -107,7 +111,6 @@ function App() {
 					} else {
 						setResizedLedIndex(index);
 					}
-					setInitialHandlePosition(mousePosition.y);
 				}}
 				onStartResizeRight={() => {
 					const isCurrentLedResizedRight = index === resizedLedindexRight;
@@ -134,13 +137,32 @@ function App() {
 									? {
 											...e,
 											x: mousePosition.x + 25,
-											width: mousePosition.x - element.x + 25,
+											width: element.x - mousePosition.x + element.width,
 									  }
 									: e
 							)
 						);
 					} else {
 						setResizedLedIndexLeft(index);
+					}
+				}}
+				onStartResizeUp={() => {
+					const isCurrentLedResizedUp = index === resizedLedIndexUp;
+					if (isCurrentLedResizedUp) {
+						setResizedLedIndexUp(null);
+						setLeds(elements =>
+							elements.map((e, i) =>
+								i === index
+									? {
+											...e,
+											y: mousePosition.y + 25,
+											height: element.y + mousePosition.y + element.height,
+									  }
+									: e
+							)
+						);
+					} else {
+						setResizedLedIndexUp(index);
 					}
 				}}>
 				{Math.round(element.x)},{Math.round(element.y)}
@@ -167,7 +189,21 @@ function App() {
 				}}>
 				Add led
 			</button>
-			<div>{JSON.stringify({ leds, mousePosition, pickedLedIndex, initialHandlePosition, resizedLedIndex, resizedLedindexRight, resizedLedIndexLeft }, undefined, "\n")}</div>
+			<div>
+				{JSON.stringify(
+					{
+						leds,
+						mousePosition,
+						pickedLedIndex,
+						resizedLedIndex,
+						resizedLedindexRight,
+						resizedLedIndexLeft,
+						resizedLedIndexUp,
+					},
+					undefined,
+					"\n"
+				)}
+			</div>
 		</div>
 	);
 }
@@ -181,6 +217,7 @@ function Led({
 	onStartResizeDown,
 	onStartResizeRight,
 	onStartResizeLeft,
+	onStartResizeUp,
 	height,
 	width,
 }) {
@@ -197,6 +234,10 @@ function Led({
 				border: isSelected ? "1.5px white solid" : " ",
 			}}>
 			<div
+				onClick={event => {
+					onStartResizeUp();
+					event.stopPropagation();
+				}}
 				className='handle'
 				style={{
 					position: "absolute",
