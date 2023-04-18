@@ -56,6 +56,13 @@ function App() {
 				? `${mousePosition.x - initialX}px`
 				: `${element.x - initialX}px`;
 
+		const ledWidth =
+			resizedLedIndexLeft === index
+				? element.x - mousePosition.x + element.width
+				: resizedLedindexRight === index
+				? mousePosition.x - element.x + 25
+				: element.width;
+
 		return (
 			<Led
 				isSelected={pickedLedIndex === index}
@@ -70,11 +77,7 @@ function App() {
 						? mousePosition.y - element.y + 14
 						: element.height
 				}
-				width={
-					resizedLedindexRight === index
-						? mousePosition.x - element.x + 25
-						: element.width
-				}
+				width={ledWidth}
 				onSelect={() => {
 					const isCurrentLedPicked = index === pickedLedIndex;
 					if (isCurrentLedPicked) {
@@ -128,7 +131,11 @@ function App() {
 						setLeds(elements =>
 							elements.map((e, i) =>
 								i === index
-									? { ...e, x: mousePosition.x, y: mousePosition.y, width: mousePosition.x - element.x + 25}
+									? {
+											...e,
+											x: mousePosition.x + 25,
+											width: mousePosition.x - element.x + 25,
+									  }
 									: e
 							)
 						);
@@ -160,6 +167,7 @@ function App() {
 				}}>
 				Add led
 			</button>
+			<div>{JSON.stringify({ leds, mousePosition, pickedLedIndex, initialHandlePosition, resizedLedIndex, resizedLedindexRight, resizedLedIndexLeft }, undefined, "\n")}</div>
 		</div>
 	);
 }
