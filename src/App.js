@@ -66,20 +66,23 @@ function App() {
 
 		const ledHeight =
 			resizedLedIndexUp === index
-				? element.y + mousePosition.y + element.height
+				? element.y - mousePosition.y + element.height
 				: resizedLedIndex === index
 				? mousePosition.y - element.y + 14
 				: element.height;
+
+		const ledPositionUp =
+			resizedLedIndexUp === index
+				? mousePosition.y - 10
+				: pickedLedIndex === index
+				? `${mousePosition.y - initialY}px`
+				: `${element.y - initialY}px`;
 
 		return (
 			<Led
 				isSelected={pickedLedIndex === index}
 				left={ledPositionLeft}
-				top={
-					pickedLedIndex === index
-						? `${mousePosition.y - initialY}px`
-						: `${element.y - initialY}px`
-				}
+				top={ledPositionUp}
 				height={ledHeight}
 				width={ledWidth}
 				onSelect={() => {
@@ -155,8 +158,8 @@ function App() {
 								i === index
 									? {
 											...e,
-											y: mousePosition.y + 25,
-											height: element.y + mousePosition.y + element.height,
+											y: mousePosition.y - 10,
+											height: element.y - mousePosition.y + element.height,
 									  }
 									: e
 							)
