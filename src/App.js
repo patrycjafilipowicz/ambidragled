@@ -26,9 +26,9 @@ function App() {
 
 	useEffect(() => {
 		const screenRef = screen.current;
-		const position = screenRef.getBoundingClientRect();
 		const handleWindowMouseMove = event => {
 			console.log(event);
+			const position = screenRef.getBoundingClientRect();
 			const xAvailableSpace =
 				event.pageX >= position.left + border + initialY &&
 				event.pageX <= position.right - border - initialY;
@@ -66,7 +66,7 @@ function App() {
 
 		const ledHeight =
 			resizedLedIndexUp === index
-				? element.y - mousePosition.y + element.height
+				? element.y - mousePosition.y + element.height - 15
 				: resizedLedIndex === index
 				? mousePosition.y - element.y + 14
 				: element.height;
