@@ -10,6 +10,7 @@ const zero = 0;
 const halfLedWidth = 25;
 const halfLedHeight = 15;
 
+
 function App() {
 	const [leds, setLeds] = useState([
 		{ x: initialX, y: initialY, height: ledHeight, width: ledWidth },
@@ -59,7 +60,7 @@ function App() {
 
 		const ledWidth =
 			resizedLedIndexLeft === index
-				? element.x - mousePosition.x + element.width
+				? element.x - mousePosition.x + element.width - 25
 				: resizedLedindexRight === index
 				? mousePosition.x - element.x + 25
 				: element.width;
@@ -140,7 +141,7 @@ function App() {
 									? {
 											...e,
 											x: mousePosition.x + 25,
-											width: element.x - mousePosition.x + element.width,
+											width: element.x - mousePosition.x + element.width - 25,
 									  }
 									: e
 							)
@@ -158,8 +159,8 @@ function App() {
 								i === index
 									? {
 											...e,
-											y: mousePosition.y - 10,
-											height: element.y - mousePosition.y + element.height,
+											y: mousePosition.y + 15,
+											height: element.y - mousePosition.y + element.height -15,
 									  }
 									: e
 							)
