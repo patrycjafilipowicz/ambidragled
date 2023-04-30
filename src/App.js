@@ -7,9 +7,12 @@ const initialX = 33;
 const initialY = 25;
 const mousemove = "mousemove";
 const zero = 0;
-const halfLedWidth = 25;
 const halfLedHeight = 15;
-
+const leftOffset = 8;
+const widthOffset = 25;
+const heightOffset1 = 15;
+const heightOffset2 = 14;
+const upOffset = 10;
 
 function App() {
 	const [leds, setLeds] = useState([
@@ -53,28 +56,28 @@ function App() {
 	const mappedAddElement = leds.map((element, index) => {
 		const ledPositionLeft =
 			resizedLedIndexLeft === index
-				? `${mousePosition.x - 8}px`
+				? `${mousePosition.x - leftOffset}px`
 				: pickedLedIndex === index
 				? `${mousePosition.x - initialX}px`
 				: `${element.x - initialX}px`;
 
 		const ledWidth =
 			resizedLedIndexLeft === index
-				? element.x - mousePosition.x + element.width - 25
+				? element.x - mousePosition.x + element.width - widthOffset
 				: resizedLedindexRight === index
-				? mousePosition.x - element.x + 25
+				? mousePosition.x - element.x + widthOffset
 				: element.width;
 
 		const ledHeight =
 			resizedLedIndexUp === index
-				? element.y - mousePosition.y + element.height - 15
+				? element.y - mousePosition.y + element.height - heightOffset1
 				: resizedLedIndex === index
-				? mousePosition.y - element.y + 14
+				? mousePosition.y - element.y + heightOffset2
 				: element.height;
 
 		const ledPositionUp =
 			resizedLedIndexUp === index
-				? mousePosition.y - 10
+				? mousePosition.y - upOffset
 				: pickedLedIndex === index
 				? `${mousePosition.y - initialY}px`
 				: `${element.y - initialY}px`;
@@ -108,7 +111,7 @@ function App() {
 						setLeds(elements =>
 							elements.map((e, i) =>
 								i === index
-									? { ...e, height: mousePosition.y - element.y + 14 }
+									? { ...e, height: mousePosition.y - element.y + heightOffset2}
 									: e
 							)
 						);
@@ -123,7 +126,7 @@ function App() {
 						setLeds(elements =>
 							elements.map((e, i) =>
 								i === index
-									? { ...e, width: mousePosition.x - element.x + 25 }
+									? { ...e, width: mousePosition.x - element.x + leftOffset }
 									: e
 							)
 						);
@@ -140,8 +143,8 @@ function App() {
 								i === index
 									? {
 											...e,
-											x: mousePosition.x + 25,
-											width: element.x - mousePosition.x + element.width - 25,
+											x: mousePosition.x + leftOffset,
+											width: element.x - mousePosition.x + element.width - leftOffset,
 									  }
 									: e
 							)
@@ -159,8 +162,8 @@ function App() {
 								i === index
 									? {
 											...e,
-											y: mousePosition.y + 15,
-											height: element.y - mousePosition.y + element.height -15,
+											y: mousePosition.y + heightOffset1,
+											height: element.y - mousePosition.y + element.height - heightOffset1,
 									  }
 									: e
 							)
