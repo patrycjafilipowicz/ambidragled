@@ -126,7 +126,7 @@ function App() {
 						setLeds(elements =>
 							elements.map((e, i) =>
 								i === index
-									? { ...e, width: mousePosition.x - element.x + leftOffset }
+									? { ...e, width: mousePosition.x - element.x + widthOffset }
 									: e
 							)
 						);
@@ -143,8 +143,8 @@ function App() {
 								i === index
 									? {
 											...e,
-											x: mousePosition.x + leftOffset,
-											width: element.x - mousePosition.x + element.width - leftOffset,
+											x: mousePosition.x + widthOffset,
+											width: element.x - mousePosition.x + element.width - widthOffset,
 									  }
 									: e
 							)
