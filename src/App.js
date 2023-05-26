@@ -31,15 +31,15 @@ function App() {
 	useEffect(() => {
 		const screenRef = screen.current;
 		const handleWindowMouseMove = event => {
-			console.log(event);
 			const position = screenRef.getBoundingClientRect();
-			const xAvailableSpace =
-				event.pageX >= position.left + border + initialY &&
-				event.pageX <= position.right - border - initialY;
-			const yAvailableSpace =
-				event.pageY >= position.top + border + halfLedHeight &&
-				event.pageY <= position.bottom - border - halfLedHeight;
-			if (xAvailableSpace && yAvailableSpace) {
+			const xInsideScreenArea =
+				event.pageX >= position.left + border &&
+				event.pageX <= position.right - border;
+			const yInsideScreenArea =
+				event.pageY >= position.top + border &&
+				event.pageY <= position.bottom - border;
+			if (xInsideScreenArea && yInsideScreenArea) {
+				 console.log({x: event.pageX, y: event.pageY})
 				setMousePosition({
 					x: event.pageX - position.left,
 					y: event.pageY - position.top,
