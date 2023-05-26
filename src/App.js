@@ -54,44 +54,46 @@ function App() {
 	}, [screen]);
 
 	const mappedAddElement = leds.map((element, index) => {
+		const isLedPicked = pickedLedIndex === index;
+		const isLedResizedLeft = resizedLedIndexLeft === index;
+		const isLedResizedUp = resizedLedIndexUp === index;
 		const ledPositionLeft =
-			resizedLedIndexLeft === index
+			isLedResizedLeft
 				? `${mousePosition.x - leftOffset}px`
-				: pickedLedIndex === index
+				: isLedPicked
 				? `${mousePosition.x - initialX}px`
 				: `${element.x - initialX}px`;
 
 		const ledWidth =
-			resizedLedIndexLeft === index
+			isLedResizedLeft
 				? element.x - mousePosition.x + element.width - widthOffset
 				: resizedLedindexRight === index
 				? mousePosition.x - element.x + widthOffset
 				: element.width;
 
 		const ledHeight =
-			resizedLedIndexUp === index
+			isLedResizedUp
 				? element.y - mousePosition.y + element.height - heightOffset1
 				: resizedLedIndex === index
 				? mousePosition.y - element.y + heightOffset2
 				: element.height;
 
 		const ledPositionUp =
-			resizedLedIndexUp === index
+			isLedResizedUp
 				? mousePosition.y - upOffset
-				: pickedLedIndex === index
+				: isLedPicked
 				? `${mousePosition.y - initialY}px`
 				: `${element.y - initialY}px`;
 
 		return (
 			<Led
-				isSelected={pickedLedIndex === index}
+				isSelected={isLedPicked}
 				left={ledPositionLeft}
 				top={ledPositionUp}
 				height={ledHeight}
 				width={ledWidth}
 				onSelect={() => {
-					const isCurrentLedPicked = index === pickedLedIndex;
-					if (isCurrentLedPicked) {
+					if (isLedPicked) {
 						setLeds(elements =>
 							elements.map((e, i) =>
 								i === index
