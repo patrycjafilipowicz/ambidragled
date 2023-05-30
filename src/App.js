@@ -27,23 +27,28 @@ function App() {
 	const [resizedLedindexRight, setResizedLedindexRight] = useState(null);
 	const [resizedLedIndexLeft, setResizedLedIndexLeft] = useState(null);
 	const [resizedLedIndexUp, setResizedLedIndexUp] = useState(null);
+	const [screenDimensions, setScreenDimensions] = useState({ height: zero, width: zero });
 
 	useEffect(() => {
 		const screenRef = screen.current;
 		const handleWindowMouseMove = event => {
-			const position = screenRef.getBoundingClientRect();
+			const screenRect = screenRef.getBoundingClientRect();
 			const xInsideScreenArea =
-				event.pageX >= position.left + border &&
-				event.pageX <= position.right - border;
+				event.pageX >= screenRect.left + border &&
+				event.pageX <= screenRect.right - border;
 			const yInsideScreenArea =
-				event.pageY >= position.top + border &&
-				event.pageY <= position.bottom - border;
+				event.pageY >= screenRect.top + border &&
+				event.pageY <= screenRect.bottom - border;
 			if (xInsideScreenArea && yInsideScreenArea) {
-				 console.log({x: event.pageX, y: event.pageY})
+				console.log({ x: event.pageX, y: event.pageY });
 				setMousePosition({
-					x: event.pageX - position.left,
-					y: event.pageY - position.top,
+					x: event.pageX - screenRect.left,
+					y: event.pageY - screenRect.top,
 				});
+				setScreenDimensions({
+					height: 
+					width: 
+				})
 			}
 		};
 		screenRef.addEventListener(mousemove, handleWindowMouseMove);
@@ -57,39 +62,35 @@ function App() {
 		const isLedPicked = pickedLedIndex === index;
 		const isLedResizedLeft = resizedLedIndexLeft === index;
 		const isLedResizedUp = resizedLedIndexUp === index;
-		const ledPositionLeft =
-			isLedResizedLeft
-				? `${mousePosition.x - leftOffset}px`
-				: isLedPicked
-				? `${mousePosition.x - initialX}px`
-				: `${element.x - initialX}px`;
+		const ledPositionLeft = isLedResizedLeft
+			? `${mousePosition.x - leftOffset}px`
+			: isLedPicked
+			? `${mousePosition.x - initialX}px`
+			: `${element.x - initialX}px`;
 
-		const ledWidth =
-			isLedResizedLeft
-				? element.x - mousePosition.x + element.width - widthOffset
-				: resizedLedindexRight === index
-				? mousePosition.x - element.x + widthOffset
-				: element.width;
+		const ledWidth = isLedResizedLeft
+			? element.x - mousePosition.x + element.width - widthOffset
+			: resizedLedindexRight === index
+			? mousePosition.x - element.x + widthOffset
+			: element.width;
 
-		const ledHeight =
-			isLedResizedUp
-				? element.y - mousePosition.y + element.height - heightOffset1
-				: resizedLedIndex === index
-				? mousePosition.y - element.y + heightOffset2
-				: element.height;
+		const ledHeight = isLedResizedUp
+			? element.y - mousePosition.y + element.height - heightOffset1
+			: resizedLedIndex === index
+			? mousePosition.y - element.y + heightOffset2
+			: element.height;
 
-		const ledPositionUp =
-			isLedResizedUp
-				? mousePosition.y - upOffset
-				: isLedPicked
-				? `${mousePosition.y - initialY}px`
-				: `${element.y - initialY}px`;
+		const ledPositionY = isLedResizedUp
+			? mousePosition.y - upOffset
+			: isLedPicked
+			? `${mousePosition.y - initialY}px`
+			: `${element.y - initialY}px`;
 
 		return (
 			<Led
 				isSelected={isLedPicked}
 				left={ledPositionLeft}
-				top={ledPositionUp}
+				top={ledPositionY}
 				height={ledHeight}
 				width={ledWidth}
 				onSelect={() => {
@@ -113,7 +114,10 @@ function App() {
 						setLeds(elements =>
 							elements.map((e, i) =>
 								i === index
-									? { ...e, height: mousePosition.y - element.y + heightOffset2}
+									? {
+											...e,
+											height: mousePosition.y - element.y + heightOffset2,
+									  }
 									: e
 							)
 						);
@@ -146,7 +150,11 @@ function App() {
 									? {
 											...e,
 											x: mousePosition.x + widthOffset,
-											width: element.x - mousePosition.x + element.width - widthOffset,
+											width:
+												element.x -
+												mousePosition.x +
+												element.width -
+												widthOffset,
 									  }
 									: e
 							)
@@ -165,7 +173,11 @@ function App() {
 									? {
 											...e,
 											y: mousePosition.y + heightOffset1,
-											height: element.y - mousePosition.y + element.height - heightOffset1,
+											height:
+												element.y -
+												mousePosition.y +
+												element.height -
+												heightOffset1,
 									  }
 									: e
 							)
