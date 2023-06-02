@@ -13,6 +13,7 @@ const widthOffset = 25;
 const heightOffset1 = 15;
 const heightOffset2 = 14;
 const upOffset = 10;
+const halfLedWidth = 25;
 
 function App() {
 	const [leds, setLeds] = useState([
@@ -27,7 +28,10 @@ function App() {
 	const [resizedLedindexRight, setResizedLedindexRight] = useState(null);
 	const [resizedLedIndexLeft, setResizedLedIndexLeft] = useState(null);
 	const [resizedLedIndexUp, setResizedLedIndexUp] = useState(null);
-	const [screenDimensions, setScreenDimensions] = useState({ height: zero, width: zero });
+	const [screenDimensions, setScreenDimensions] = useState({
+		height: zero,
+		width: zero,
+	});
 
 	useEffect(() => {
 		const screenRef = screen.current;
@@ -46,9 +50,9 @@ function App() {
 					y: event.pageY - screenRect.top,
 				});
 				setScreenDimensions({
-					height: 
-					width: 
-				})
+					height: screenRect.height,
+					width: screenRect.width,
+				});
 			}
 		};
 		screenRef.addEventListener(mousemove, handleWindowMouseMove);
@@ -62,11 +66,6 @@ function App() {
 		const isLedPicked = pickedLedIndex === index;
 		const isLedResizedLeft = resizedLedIndexLeft === index;
 		const isLedResizedUp = resizedLedIndexUp === index;
-		const ledPositionLeft = isLedResizedLeft
-			? `${mousePosition.x - leftOffset}px`
-			: isLedPicked
-			? `${mousePosition.x - initialX}px`
-			: `${element.x - initialX}px`;
 
 		const ledWidth = isLedResizedLeft
 			? element.x - mousePosition.x + element.width - widthOffset
@@ -80,16 +79,30 @@ function App() {
 			? mousePosition.y - element.y + heightOffset2
 			: element.height;
 
+		const pickedLedPositionY =
+			mousePosition.y <= screenDimensions.height - ledHeight
+				? mousePosition.y - initialY
+				: screenDimensions.height - ledHeight - border - halfLedHeight;
 		const ledPositionY = isLedResizedUp
 			? mousePosition.y - upOffset
 			: isLedPicked
-			? `${mousePosition.y - initialY}px`
-			: `${element.y - initialY}px`;
+			? pickedLedPositionY
+			: element.y - initialY;
+
+		const pickedLedPositionX =
+			mousePosition.x <= screenDimensions.width - ledWidth
+				? mousePosition.x - initialX
+				: screenDimensions.width - ledWidth - border - halfLedHeight;
+		const ledPositionX = isLedResizedLeft
+			? `${mousePosition.x - leftOffset}px`
+			: isLedPicked
+			? pickedLedPositionX
+			: `${element.x - initialX}px`;
 
 		return (
 			<Led
 				isSelected={isLedPicked}
-				left={ledPositionLeft}
+				left={ledPositionX}
 				top={ledPositionY}
 				height={ledHeight}
 				width={ledWidth}
