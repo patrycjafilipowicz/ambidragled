@@ -24,7 +24,7 @@ function App() {
 	const [pickedLedIndex, setPickedLedIndex] = useState(null);
 	const screen = useRef();
 
-	const [resizedLedIndex, setResizedLedIndex] = useState(null);
+	const [resizedLedIndexDown, setResizedLedIndex] = useState(null);
 	const [resizedLedindexRight, setResizedLedindexRight] = useState(null);
 	const [resizedLedIndexLeft, setResizedLedIndexLeft] = useState(null);
 	const [resizedLedIndexUp, setResizedLedIndexUp] = useState(null);
@@ -62,42 +62,53 @@ function App() {
 		};
 	}, [screen]);
 
-	const mappedAddElement = leds.map((element, index) => {
+	const ledComponents = leds.map((led, index) => {
 		const isLedPicked = pickedLedIndex === index;
 		const isLedResizedLeft = resizedLedIndexLeft === index;
 		const isLedResizedUp = resizedLedIndexUp === index;
+		const isLedResizedRight = resizedLedindexRight === index;
+		const isLedResizedDown = resizedLedIndexDown === index;
 
 		const ledWidth = isLedResizedLeft
-			? element.x - mousePosition.x + element.width - widthOffset
-			: resizedLedindexRight === index
-			? mousePosition.x - element.x + widthOffset
-			: element.width;
+			? led.x - mousePosition.x + led.width - widthOffset
+			: isLedResizedRight
+			? mousePosition.x - led.x + widthOffset
+			: led.width;
 
 		const ledHeight = isLedResizedUp
-			? element.y - mousePosition.y + element.height - heightOffset1
-			: resizedLedIndex === index
-			? mousePosition.y - element.y + heightOffset2
-			: element.height;
+			? led.y - mousePosition.y + led.height - heightOffset1
+			: isLedResizedDown
+			? mousePosition.y - led.y + heightOffset2
+			: led.height;
 
-		const pickedLedPositionY =
-			mousePosition.y <= screenDimensions.height - ledHeight
+		const pickedLedPositionYDown = mousePosition.y <= screenDimensions.height - ledHeight
 				? mousePosition.y - initialY
-				: screenDimensions.height - ledHeight - border - halfLedHeight;
+				: screenDimensions.height - border - ledHeight - halfLedHeight;
+
+		const pickedLedPositionYUp = mousePosition.y <= initialY
+			? 0
+			: pickedLedPositionYDown;
+
 		const ledPositionY = isLedResizedUp
 			? mousePosition.y - upOffset
 			: isLedPicked
-			? pickedLedPositionY
-			: element.y - initialY;
+			? pickedLedPositionYUp
+			: led.y - initialY;
 
-		const pickedLedPositionX =
+		const ledPositionXLeft = mousePosition.x >= initialX 
+			? mousePosition.x - initialX 
+			: 0;
+
+		const pickedLedPositionXRight =
 			mousePosition.x <= screenDimensions.width - ledWidth
-				? mousePosition.x - initialX
-				: screenDimensions.width - ledWidth - border - halfLedHeight;
+				? ledPositionXLeft
+				: screenDimensions.width - border - ledWidth - halfLedHeight;
+
 		const ledPositionX = isLedResizedLeft
-			? `${mousePosition.x - leftOffset}px`
+			? mousePosition.x - leftOffset
 			: isLedPicked
-			? pickedLedPositionX
-			: `${element.x - initialX}px`;
+			? pickedLedPositionXRight
+			: led.x - initialX;
 
 		return (
 			<Led
@@ -121,7 +132,7 @@ function App() {
 					}
 				}}
 				onStartResizeDown={() => {
-					const isCurrentLedResized = index === resizedLedIndex;
+					const isCurrentLedResized = index === resizedLedIndexDown;
 					if (isCurrentLedResized) {
 						setResizedLedIndex(null);
 						setLeds(elements =>
@@ -129,7 +140,7 @@ function App() {
 								i === index
 									? {
 											...e,
-											height: mousePosition.y - element.y + heightOffset2,
+											height: mousePosition.y - led.y + heightOffset2,
 									  }
 									: e
 							)
@@ -145,7 +156,7 @@ function App() {
 						setLeds(elements =>
 							elements.map((e, i) =>
 								i === index
-									? { ...e, width: mousePosition.x - element.x + widthOffset }
+									? { ...e, width: mousePosition.x - led.x + widthOffset }
 									: e
 							)
 						);
@@ -163,11 +174,7 @@ function App() {
 									? {
 											...e,
 											x: mousePosition.x + widthOffset,
-											width:
-												element.x -
-												mousePosition.x +
-												element.width -
-												widthOffset,
+											width: led.x - mousePosition.x + led.width - widthOffset,
 									  }
 									: e
 							)
@@ -187,10 +194,7 @@ function App() {
 											...e,
 											y: mousePosition.y + heightOffset1,
 											height:
-												element.y -
-												mousePosition.y +
-												element.height -
-												heightOffset1,
+												led.y - mousePosition.y + led.height - heightOffset1,
 									  }
 									: e
 							)
@@ -199,15 +203,16 @@ function App() {
 						setResizedLedIndexUp(index);
 					}
 				}}>
-				{Math.round(element.x)},{Math.round(element.y)}
+				{Math.round(led.x)},{Math.round(led.y)}
 			</Led>
 		);
 	});
 
+	console.log(ledComponents);
 	return (
 		<div>
 			<div ref={screen} className='screen'>
-				<div>{mappedAddElement}</div>
+				<div>{ledComponents}</div>
 			</div>
 			<div className='coords'>
 				<p>
@@ -229,7 +234,7 @@ function App() {
 						leds,
 						mousePosition,
 						pickedLedIndex,
-						resizedLedIndex,
+						resizedLedIndex: resizedLedIndexDown,
 						resizedLedindexRight,
 						resizedLedIndexLeft,
 						resizedLedIndexUp,
