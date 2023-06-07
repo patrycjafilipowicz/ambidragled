@@ -72,7 +72,7 @@ function App() {
 		const ledWidth = isLedResizedLeft
 			? led.x - mousePosition.x + led.width + border
 			: isLedResizedRight
-			? mousePosition.x - led.x + widthOffset
+			? mousePosition.x - led.x - border
 			: led.width;
 
 		const ledHeight = isLedResizedUp
@@ -153,7 +153,7 @@ function App() {
 						setLeds(elements =>
 							elements.map((e, i) =>
 								i === index
-									? { ...e, width: mousePosition.x - led.x + widthOffset }
+									? { ...e, width: mousePosition.x - led.x - border }
 									: e
 							)
 						);
