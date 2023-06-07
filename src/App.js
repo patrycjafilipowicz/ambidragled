@@ -76,28 +76,27 @@ function App() {
 			: led.width;
 
 		const ledHeight = isLedResizedUp
-			? led.y - mousePosition.y + led.height - heightOffset1
+			? led.y - mousePosition.y + led.height + border
 			: isLedResizedDown
-			? mousePosition.y - led.y + heightOffset2
+			? mousePosition.y - led.y - border
 			: led.height;
 
-		const pickedLedPositionYDown = mousePosition.y <= screenDimensions.height - ledHeight
+		const pickedLedPositionYDown =
+			mousePosition.y <= screenDimensions.height - ledHeight
 				? mousePosition.y - initialY
 				: screenDimensions.height - border - ledHeight - halfLedHeight;
 
-		const pickedLedPositionYUp = mousePosition.y <= initialY
-			? 0
-			: pickedLedPositionYDown;
+		const pickedLedPositionYUp =
+			mousePosition.y <= initialY ? 0 : pickedLedPositionYDown;
 
 		const ledPositionY = isLedResizedUp
 			? mousePosition.y - upOffset
 			: isLedPicked
 			? pickedLedPositionYUp
-			: led.y - initialY;
+			: led.y;
 
-		const ledPositionXLeft = mousePosition.x >= initialX 
-			? mousePosition.x - initialX 
-			: 0;
+		const ledPositionXLeft =
+			mousePosition.x >= initialX ? mousePosition.x - initialX : 0;
 
 		const pickedLedPositionXRight =
 			mousePosition.x <= screenDimensions.width - ledWidth
@@ -108,7 +107,7 @@ function App() {
 			? mousePosition.x - leftOffset
 			: isLedPicked
 			? pickedLedPositionXRight
-			: led.x - initialX;
+			: led.x;
 
 		return (
 			<Led
@@ -121,9 +120,7 @@ function App() {
 					if (isLedPicked) {
 						setLeds(elements =>
 							elements.map((e, i) =>
-								i === index
-									? { ...e, x: mousePosition.x, y: mousePosition.y }
-									: e
+								i === index ? { ...e, x: ledPositionX, y: ledPositionY } : e
 							)
 						);
 						setPickedLedIndex(null);
@@ -140,7 +137,7 @@ function App() {
 								i === index
 									? {
 											...e,
-											height: mousePosition.y - led.y + heightOffset2,
+											height: mousePosition.y - led.y - border,
 									  }
 									: e
 							)
@@ -192,9 +189,8 @@ function App() {
 								i === index
 									? {
 											...e,
-											y: mousePosition.y + heightOffset1,
-											height:
-												led.y - mousePosition.y + led.height - heightOffset1,
+											y: mousePosition.y - border,
+											height: ledHeight,
 									  }
 									: e
 							)
