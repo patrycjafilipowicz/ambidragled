@@ -8,12 +8,6 @@ const initialY = 25;
 const mousemove = "mousemove";
 const zero = 0;
 const halfLedHeight = 15;
-const leftOffset = 8;
-const widthOffset = 25;
-const heightOffset1 = 15;
-const heightOffset2 = 14;
-const upOffset = 10;
-const halfLedWidth = 25;
 
 function App() {
 	const [leds, setLeds] = useState([
@@ -90,7 +84,7 @@ function App() {
 			mousePosition.y <= initialY ? 0 : pickedLedPositionYDown;
 
 		const ledPositionY = isLedResizedUp
-			? mousePosition.y - upOffset
+			? mousePosition.y - border
 			: isLedPicked
 			? pickedLedPositionYUp
 			: led.y;
