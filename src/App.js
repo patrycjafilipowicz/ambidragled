@@ -70,7 +70,7 @@ function App() {
 		const isLedResizedDown = resizedLedIndexDown === index;
 
 		const ledWidth = isLedResizedLeft
-			? led.x - mousePosition.x + led.width - widthOffset
+			? led.x - mousePosition.x + led.width + border
 			: isLedResizedRight
 			? mousePosition.x - led.x + widthOffset
 			: led.width;
@@ -104,7 +104,7 @@ function App() {
 				: screenDimensions.width - border - ledWidth - halfLedHeight;
 
 		const ledPositionX = isLedResizedLeft
-			? mousePosition.x - leftOffset
+			? mousePosition.x - border
 			: isLedPicked
 			? pickedLedPositionXRight
 			: led.x;
@@ -170,8 +170,8 @@ function App() {
 								i === index
 									? {
 											...e,
-											x: mousePosition.x + widthOffset,
-											width: led.x - mousePosition.x + led.width - widthOffset,
+											x: mousePosition.x - border,
+											width: ledWidth,
 									  }
 									: e
 							)
