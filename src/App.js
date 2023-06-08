@@ -106,6 +106,10 @@ function App() {
 				top={ledPositionY}
 				height={ledHeight}
 				width={ledWidth}
+				isLedResizedDown={isLedResizedDown}
+				isLedResizedLeft={isLedResizedLeft}
+				isLedResizedUp={isLedResizedUp}
+				isLedResizedRight={isLedResizedRight}
 				onSelect={() => {
 					if (isLedPicked) {
 						setLeds(elements =>
@@ -244,6 +248,10 @@ function Led({
 	onStartResizeUp,
 	height,
 	width,
+	isLedResizedDown,
+	isLedResizedUp,
+	isLedResizedRight,
+	isLedResizedLeft,
 }) {
 	return (
 		<div
@@ -256,6 +264,8 @@ function Led({
 				top: top,
 				position: "absolute",
 				border: isSelected ? "1.5px white solid" : " ",
+				backgroundColor: isSelected ? "#4c87c3" : " ",
+				transition: "background-color 0.5s ease-in-out",
 			}}>
 			<div
 				onClick={event => {
@@ -267,9 +277,11 @@ function Led({
 					position: "absolute",
 					left: "calc(50% - 2.5px)",
 					top: -2.5,
-					backgroundColor: "white",
 					width: 5,
 					height: 5,
+					backgroundColor: isLedResizedUp ? "#0d6146" : "#ffffff",
+					transition: "background-color 0.5s ease-in-out",
+
 				}}></div>
 			<div
 				onClick={event => {
@@ -281,9 +293,10 @@ function Led({
 					position: "absolute",
 					left: "calc(50% - 2.5px)",
 					bottom: -2.5,
-					backgroundColor: "white",
 					width: 5,
 					height: 5,
+					backgroundColor: isLedResizedDown ? "#0d6146" : "#ffffff",
+					transition: "background-color 0.5s ease-in-out",
 				}}></div>
 			<div
 				onClick={event => {
@@ -295,9 +308,10 @@ function Led({
 					position: "absolute",
 					left: -2.5,
 					top: "calc(50% - 2.5px)",
-					backgroundColor: "white",
 					width: 5,
 					height: 5,
+					backgroundColor: isLedResizedLeft ? "#0d6146" : "#ffffff",
+					transition: "background-color 0.5s ease-in-out",
 				}}></div>
 			<div
 				onClick={event => {
@@ -309,9 +323,10 @@ function Led({
 					position: "absolute",
 					right: -2.5,
 					top: "calc(50% - 2.5px)",
-					backgroundColor: "white",
 					width: 5,
 					height: 5,
+					backgroundColor: isLedResizedRight ? "#0d6146" : "#ffffff",
+					transition: "background-color 0.5s ease-in-out",
 				}}></div>
 			{children}
 		</div>
