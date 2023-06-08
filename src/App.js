@@ -11,21 +11,17 @@ const halfLedHeight = 15;
 
 function App() {
 	const [leds, setLeds] = useState([
-		{ x: initialX, y: initialY, height: ledHeight, width: ledWidth },
-	]);
+		{ x: initialX, y: initialY, height: ledHeight, width: ledWidth },]);
 	// Coordinates are relative to parent box top left corner
 	const [mousePosition, setMousePosition] = useState({ x: zero, y: zero });
 	const [pickedLedIndex, setPickedLedIndex] = useState(null);
 	const screen = useRef();
 
-	const [resizedLedIndexDown, setResizedLedIndex] = useState(null);
-	const [resizedLedindexRight, setResizedLedindexRight] = useState(null);
-	const [resizedLedIndexLeft, setResizedLedIndexLeft] = useState(null);
-	const [resizedLedIndexUp, setResizedLedIndexUp] = useState(null);
-	const [screenDimensions, setScreenDimensions] = useState({
-		height: zero,
-		width: zero,
-	});
+	const [resizedDownLedIndex, setResizedLedIndex] = useState(null);
+	const [resizedRightLedindex, setResizedLedindexRight] = useState(null);
+	const [resizedLeftLedIndex, setResizedLedIndexLeft] = useState(null);
+	const [resizedUpLedIndex, setResizedLedIndexUp] = useState(null);
+	const [screenDimensions, setScreenDimensions] = useState({ height: zero, width: zero });
 
 	useEffect(() => {
 		const screenRef = screen.current;
@@ -38,7 +34,6 @@ function App() {
 				event.pageY >= screenRect.top + border &&
 				event.pageY <= screenRect.bottom - border;
 			if (xInsideScreenArea && yInsideScreenArea) {
-				console.log({ x: event.pageX, y: event.pageY });
 				setMousePosition({
 					x: event.pageX - screenRect.left,
 					y: event.pageY - screenRect.top,
@@ -58,10 +53,10 @@ function App() {
 
 	const ledComponents = leds.map((led, index) => {
 		const isLedPicked = pickedLedIndex === index;
-		const isLedResizedLeft = resizedLedIndexLeft === index;
-		const isLedResizedUp = resizedLedIndexUp === index;
-		const isLedResizedRight = resizedLedindexRight === index;
-		const isLedResizedDown = resizedLedIndexDown === index;
+		const isLedResizedLeft = resizedLeftLedIndex === index;
+		const isLedResizedUp = resizedUpLedIndex === index;
+		const isLedResizedRight = resizedRightLedindex === index;
+		const isLedResizedDown = resizedDownLedIndex === index;
 
 		const ledWidth = isLedResizedLeft
 			? led.x - mousePosition.x + led.width + border
@@ -102,6 +97,7 @@ function App() {
 			: isLedPicked
 			? pickedLedPositionXRight
 			: led.x;
+		console.log(ledPositionX);
 
 		return (
 			<Led
@@ -123,7 +119,7 @@ function App() {
 					}
 				}}
 				onStartResizeDown={() => {
-					const isCurrentLedResized = index === resizedLedIndexDown;
+					const isCurrentLedResized = index === resizedDownLedIndex;
 					if (isCurrentLedResized) {
 						setResizedLedIndex(null);
 						setLeds(elements =>
@@ -141,7 +137,7 @@ function App() {
 					}
 				}}
 				onStartResizeRight={() => {
-					const isCurrentLedResizedRight = index === resizedLedindexRight;
+					const isCurrentLedResizedRight = index === resizedRightLedindex;
 					if (isCurrentLedResizedRight) {
 						setResizedLedindexRight(null);
 						setLeds(elements =>
@@ -156,7 +152,7 @@ function App() {
 					}
 				}}
 				onStartResizeLeft={() => {
-					const isCurrentLedResizedLeft = index === resizedLedIndexLeft;
+					const isCurrentLedResizedLeft = index === resizedLeftLedIndex;
 					if (isCurrentLedResizedLeft) {
 						setResizedLedIndexLeft(null);
 						setLeds(elements =>
@@ -175,7 +171,7 @@ function App() {
 					}
 				}}
 				onStartResizeUp={() => {
-					const isCurrentLedResizedUp = index === resizedLedIndexUp;
+					const isCurrentLedResizedUp = index === resizedUpLedIndex;
 					if (isCurrentLedResizedUp) {
 						setResizedLedIndexUp(null);
 						setLeds(elements =>
@@ -198,7 +194,6 @@ function App() {
 		);
 	});
 
-	console.log(ledComponents);
 	return (
 		<div>
 			<div ref={screen} className='screen'>
@@ -214,7 +209,7 @@ function App() {
 			</div>
 			<button
 				onClick={() => {
-					setLeds(leds => [...leds, { x: initialX, y: initialY }]);
+					setLeds(leds => [...leds, { x: initialX, y: initialY, width: ledWidth, height: ledHeight }]);
 				}}>
 				Add led
 			</button>
@@ -224,10 +219,10 @@ function App() {
 						leds,
 						mousePosition,
 						pickedLedIndex,
-						resizedLedIndex: resizedLedIndexDown,
-						resizedLedindexRight,
-						resizedLedIndexLeft,
-						resizedLedIndexUp,
+						resizedLedIndex: resizedDownLedIndex,
+						resizedLedindexRight: resizedRightLedindex,
+						resizedLedIndexLeft: resizedLeftLedIndex,
+						resizedLedIndexUp: resizedUpLedIndex,
 					},
 					undefined,
 					"\n"
