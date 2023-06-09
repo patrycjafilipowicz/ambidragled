@@ -263,9 +263,10 @@ function Led({
 				width: width,
 				top: top,
 				position: "absolute",
-				border: isSelected ? "1.5px white solid" : " ",
-				backgroundColor: isSelected ? "#4c87c3" : " ",
-				transition: "background-color 0.5s ease-in-out",
+				border: isSelected ? "2px #ffffff solid" : "1.5px #4C243B solid",
+				backgroundColor: isSelected ? "#54457F" : "#B84A62",
+				transition: "background-color 0.3s ease-in-out",
+				opacity: "0.8",
 			}}>
 			<div
 				onClick={event => {
@@ -279,7 +280,7 @@ function Led({
 					top: -2.5,
 					width: 5,
 					height: 5,
-					backgroundColor: isLedResizedUp ? "#0d6146" : "#ffffff",
+					backgroundColor: isLedResizedUp ? "#BCB382" : "#ffffff",
 					transition: "background-color 0.5s ease-in-out",
 
 				}}></div>

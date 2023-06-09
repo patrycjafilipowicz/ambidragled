@@ -40,12 +40,12 @@
 .screen {
     height: 300px;
     width: 500px;
-    background-color: grey;
+    background-color: #F5A6E6;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: 10px solid black;
+    border: 10px solid #4C243B;
 }
 
 .led {
