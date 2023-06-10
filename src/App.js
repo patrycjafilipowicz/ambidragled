@@ -110,6 +110,13 @@ function App() {
 				isLedResizedLeft={isLedResizedLeft}
 				isLedResizedUp={isLedResizedUp}
 				isLedResizedRight={isLedResizedRight}
+				onKeyDown={(e) => {
+					if (e.key === "Delete") {
+						const deleteLed = leds.filter((led, index) => index !== pickedLedIndex);
+						setLeds(deleteLed);
+						setPickedLedIndex(null);
+					}
+				}}
 				onSelect={() => {
 					if (isLedPicked) {
 						setLeds(elements =>
@@ -192,7 +199,8 @@ function App() {
 					} else {
 						setResizedLedIndexUp(index);
 					}
-				}}>
+				}}
+				>
 				{Math.round(led.x)},{Math.round(led.y)}
 			</Led>
 		);
@@ -246,17 +254,22 @@ function Led({
 	onStartResizeRight,
 	onStartResizeLeft,
 	onStartResizeUp,
+	onKeyDown,
 	height,
 	width,
 	isLedResizedDown,
 	isLedResizedUp,
 	isLedResizedRight,
 	isLedResizedLeft,
+	pickedLedIndex,
 }) {
 	return (
 		<div
 			className='led'
 			onClick={onSelect}
+			ledIndex={pickedLedIndex}
+			tabIndex="0"
+			onKeyDown={onKeyDown}
 			style={{
 				left: left,
 				height: height,
