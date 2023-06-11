@@ -22,6 +22,7 @@ function App() {
 	const [resizedLeftLedIndex, setResizedLedIndexLeft] = useState(null);
 	const [resizedUpLedIndex, setResizedLedIndexUp] = useState(null);
 	const [screenDimensions, setScreenDimensions] = useState({ height: zero, width: zero });
+	const [count, setCount] = useState(0);
 
 	useEffect(() => {
 		const screenRef = screen.current;
@@ -222,8 +223,9 @@ function App() {
 			<button
 				onClick={() => {
 					setLeds(leds => [...leds, { x: initialX, y: initialY, width: ledWidth, height: ledHeight }]);
+					setCount(count => count + 1);
 				}}>
-				Add led {<br></br>} click count:
+				Add led {<br></br>} click count: {count}
 			</button>
 			<div>
 				{JSON.stringify(
