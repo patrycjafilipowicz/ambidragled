@@ -223,7 +223,7 @@ function App() {
 				onClick={() => {
 					setLeds(leds => [...leds, { x: initialX, y: initialY, width: ledWidth, height: ledHeight }]);
 				}}>
-				Add led
+				Add led {<br></br>} click count:
 			</button>
 			<div>
 				{JSON.stringify(
@@ -261,13 +261,11 @@ function Led({
 	isLedResizedUp,
 	isLedResizedRight,
 	isLedResizedLeft,
-	pickedLedIndex,
 }) {
 	return (
 		<div
 			className='led'
 			onClick={onSelect}
-			ledIndex={pickedLedIndex}
 			tabIndex="0"
 			onKeyDown={onKeyDown}
 			style={{
@@ -291,7 +289,7 @@ function Led({
 					position: "absolute",
 					left: "calc(50% - 2.5px)",
 					top: -2.5,
-					width: 5,
+					width: 5, 
 					height: 5,
 					backgroundColor: isLedResizedUp ? "#BCB382" : "#ffffff",
 					transition: "background-color 0.5s ease-in-out",

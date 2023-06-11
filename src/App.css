@@ -50,6 +50,10 @@
 
 .led {
   height: 30px;
-    width: 50px;
-    background-color: rgb(209, 80, 169); 
+  width: 50px;
+  background-color: rgb(209, 80, 169); 
+}
+
+.led:focus {
+  outline: none;
 }
