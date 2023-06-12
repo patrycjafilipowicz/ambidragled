@@ -50,8 +50,17 @@
 
 .led {
   height: 30px;
-  width: 50px;
-  background-color: rgb(209, 80, 169); 
+  width: 50px; 
+  position: absolute;
+  opacity: 0.8;
+  border: 1.5px #4C243B solid;
+  background-color: #B84A62;
+  transition: "background-color 0.3s ease-in-out";
+}
+
+.led-selected {
+  border: 2px #ffffff solid;
+  background-color: #54457F;
 }
 
 .led:focus {

@@ -11,7 +11,8 @@ const halfLedHeight = 15;
 
 function App() {
 	const [leds, setLeds] = useState([
-		{ x: initialX, y: initialY, height: ledHeight, width: ledWidth },]);
+		{ x: initialX, y: initialY, height: ledHeight, width: ledWidth, key: -1 },
+	]);
 	// Coordinates are relative to parent box top left corner
 	const [mousePosition, setMousePosition] = useState({ x: zero, y: zero });
 	const [pickedLedIndex, setPickedLedIndex] = useState(null);
@@ -21,7 +22,10 @@ function App() {
 	const [resizedRightLedindex, setResizedLedindexRight] = useState(null);
 	const [resizedLeftLedIndex, setResizedLedIndexLeft] = useState(null);
 	const [resizedUpLedIndex, setResizedLedIndexUp] = useState(null);
-	const [screenDimensions, setScreenDimensions] = useState({ height: zero, width: zero });
+	const [screenDimensions, setScreenDimensions] = useState({
+		height: zero,
+		width: zero,
+	});
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {
@@ -98,10 +102,10 @@ function App() {
 			: isLedPicked
 			? pickedLedPositionXRight
 			: led.x;
-		console.log(ledPositionX);
 
 		return (
 			<Led
+				key={led.key}
 				isSelected={isLedPicked}
 				left={ledPositionX}
 				top={ledPositionY}
@@ -111,9 +115,9 @@ function App() {
 				isLedResizedLeft={isLedResizedLeft}
 				isLedResizedUp={isLedResizedUp}
 				isLedResizedRight={isLedResizedRight}
-				onKeyDown={(e) => {
+				onKeyDown={e => {
 					if (e.key === "Delete") {
-						const deleteLed = leds.filter((led, index) => index !== pickedLedIndex);
+						const deleteLed = leds.filter((led, i) => i !== pickedLedIndex);
 						setLeds(deleteLed);
 						setPickedLedIndex(null);
 					}
@@ -200,8 +204,7 @@ function App() {
 					} else {
 						setResizedLedIndexUp(index);
 					}
-				}}
-				>
+				}}>
 				{Math.round(led.x)},{Math.round(led.y)}
 			</Led>
 		);
@@ -222,7 +225,16 @@ function App() {
 			</div>
 			<button
 				onClick={() => {
-					setLeds(leds => [...leds, { x: initialX, y: initialY, width: ledWidth, height: ledHeight }]);
+					setLeds(leds => [
+						...leds,
+						{
+							x: initialX,
+							y: initialY,
+							width: ledWidth,
+							height: ledHeight,
+							key: count,
+						},
+					]);
 					setCount(count => count + 1);
 				}}>
 				Add led {<br></br>} click count: {count}
@@ -266,20 +278,15 @@ function Led({
 }) {
 	return (
 		<div
-			className='led'
+			className={isSelected ? "led-selected led" : "led"}
 			onClick={onSelect}
-			tabIndex="0"
+			tabIndex='0'
 			onKeyDown={onKeyDown}
 			style={{
 				left: left,
 				height: height,
 				width: width,
 				top: top,
-				position: "absolute",
-				border: isSelected ? "2px #ffffff solid" : "1.5px #4C243B solid",
-				backgroundColor: isSelected ? "#54457F" : "#B84A62",
-				transition: "background-color 0.3s ease-in-out",
-				opacity: "0.8",
 			}}>
 			<div
 				onClick={event => {
@@ -291,11 +298,10 @@ function Led({
 					position: "absolute",
 					left: "calc(50% - 2.5px)",
 					top: -2.5,
-					width: 5, 
+					width: 5,
 					height: 5,
 					backgroundColor: isLedResizedUp ? "#BCB382" : "#ffffff",
 					transition: "background-color 0.5s ease-in-out",
-
 				}}></div>
 			<div
 				onClick={event => {
