@@ -240,19 +240,21 @@ function App() {
 				Add led {<br></br>} click count: {count}
 			</button>
 			<div>
-				{JSON.stringify(
-					{
-						leds,
-						mousePosition,
-						pickedLedIndex,
-						resizedLedIndex: resizedDownLedIndex,
-						resizedLedindexRight: resizedRightLedindex,
-						resizedLedIndexLeft: resizedLeftLedIndex,
-						resizedLedIndexUp: resizedUpLedIndex,
-					},
-					undefined,
-					"\n"
-				)}
+				<pre>
+					{JSON.stringify(
+						{
+							leds,
+							mousePosition,
+							pickedLedIndex,
+							resizedLedIndex: resizedDownLedIndex,
+							resizedLedindexRight: resizedRightLedindex,
+							resizedLedIndexLeft: resizedLeftLedIndex,
+							resizedLedIndexUp: resizedUpLedIndex,
+						},
+						undefined,
+						2
+					)}
+				</pre>
 			</div>
 		</div>
 	);
