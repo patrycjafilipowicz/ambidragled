@@ -53,6 +53,7 @@ function App() {
 
 		return () => {
 			screenRef.removeEventListener(mousemove, handleWindowMouseMove);
+			
 		};
 	}, [screen]);
 
@@ -210,6 +211,18 @@ function App() {
 		);
 	});
 
+	const q = leds.map((led, index) => {
+		return (
+			{
+				group: 0,
+				hmax: led.y/screenDimensions.height,
+				hmin: (led.y + led.height)/screenDimensions.height,
+				vmax: (led.x + led.width)/screenDimensions.width,
+				vmin: led.x/screenDimensions.width,
+			}
+		);
+	});
+
 	return (
 		<div>
 			<div ref={screen} className='screen'>
@@ -239,6 +252,8 @@ function App() {
 				}}>
 				Add led {<br></br>} click count: {count}
 			</button>
+			<br></br>
+			<input />
 			<div>
 				<pre>
 					{JSON.stringify(
@@ -250,6 +265,7 @@ function App() {
 							resizedLedindexRight: resizedRightLedindex,
 							resizedLedIndexLeft: resizedLeftLedIndex,
 							resizedLedIndexUp: resizedUpLedIndex,
+							q:q,
 						},
 						undefined,
 						2
