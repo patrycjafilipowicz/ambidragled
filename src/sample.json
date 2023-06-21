@@ -1,10 +1,10 @@
 [
 	{
 		"group": 0,
-		"hmax": 1, // y/screen.height
-		"hmin": 0.85, //(y + led.height)/screen.height
-		"vmax": 0.85, // (x + led.width)/screen.width
-		"vmin": 0.15 // x/screen.width
+		"hmax": 1,
+		"hmin": 0.85, 
+		"vmax": 0.85, 
+		"vmin": 0.15 
 	}
 ]
  

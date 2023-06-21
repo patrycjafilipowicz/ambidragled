@@ -27,6 +27,20 @@ function App() {
 		width: zero,
 	});
 	const [count, setCount] = useState(0);
+	const [bbb, setBbb] = useState([
+		{
+		  "group": 0,
+		  "hmax": null,
+		  "hmin": null,
+		  "vmax": null,
+		  "vmin": null
+		}
+	  ])
+
+	useEffect(() => {
+		setBbb(leds)
+	}, [leds]);
+
 
 	useEffect(() => {
 		const screenRef = screen.current;
@@ -253,7 +267,20 @@ function App() {
 				Add led {<br></br>} click count: {count}
 			</button>
 			<br></br>
-			<input />
+			{/* <input 
+			size="9"
+			value={JSON.stringify(
+				q,
+			)} /> */}
+			<textarea
+			rows={JSON.stringify(q, undefined, 2).split('\n').length}
+			value={JSON.stringify(q, undefined, 2)}
+			/>
+				
+				<textarea
+			rows={JSON.stringify(q, undefined, 2).split('\n').length}
+			value={JSON.stringify(bbb)}
+			/>
 			<div>
 				<pre>
 					{JSON.stringify(
@@ -265,7 +292,6 @@ function App() {
 							resizedLedindexRight: resizedRightLedindex,
 							resizedLedIndexLeft: resizedLeftLedIndex,
 							resizedLedIndexUp: resizedUpLedIndex,
-							q:q,
 						},
 						undefined,
 						2
