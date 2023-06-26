@@ -27,20 +27,35 @@ function App() {
 		width: zero,
 	});
 	const [count, setCount] = useState(0);
-	const [bbb, setBbb] = useState([
+	const [procent, setProcent] = useState([
 		{
-		  "group": 0,
-		  "hmax": null,
-		  "hmin": null,
-		  "vmax": null,
-		  "vmin": null
-		}
-	  ])
+			group: 0,
+			hmax: null,
+			hmin: null,
+			vmax: null,
+			vmin: null,
+		},
+	]);
+
+	const ledMapper = (led, index) => {
+		return {
+			group: 0,
+			hmax: led.y / screenDimensions.height,
+			hmin: (led.y + led.height) / screenDimensions.height,
+			vmax: (led.x + led.width) / screenDimensions.width,
+			vmin: led.x / screenDimensions.width,
+		};
+	};
+	const procentLed = leds.map(ledMapper);
 
 	useEffect(() => {
-		setBbb(leds)
-	}, [leds]);
+		setProcent(procentLed);
+	}, [procentLed]);
 
+	const handleMessageChange = event => {
+		console.log(event.target.value);
+		setProcent(JSON.parse(event.target.value));
+	};
 
 	useEffect(() => {
 		const screenRef = screen.current;
@@ -67,7 +82,6 @@ function App() {
 
 		return () => {
 			screenRef.removeEventListener(mousemove, handleWindowMouseMove);
-			
 		};
 	}, [screen]);
 
@@ -225,18 +239,6 @@ function App() {
 		);
 	});
 
-	const q = leds.map((led, index) => {
-		return (
-			{
-				group: 0,
-				hmax: led.y/screenDimensions.height,
-				hmin: (led.y + led.height)/screenDimensions.height,
-				vmax: (led.x + led.width)/screenDimensions.width,
-				vmin: led.x/screenDimensions.width,
-			}
-		);
-	});
-
 	return (
 		<div>
 			<div ref={screen} className='screen'>
@@ -267,19 +269,11 @@ function App() {
 				Add led {<br></br>} click count: {count}
 			</button>
 			<br></br>
-			{/* <input 
-			size="9"
-			value={JSON.stringify(
-				q,
-			)} /> */}
+
 			<textarea
-			rows={JSON.stringify(q, undefined, 2).split('\n').length}
-			value={JSON.stringify(q, undefined, 2)}
-			/>
-				
-				<textarea
-			rows={JSON.stringify(q, undefined, 2).split('\n').length}
-			value={JSON.stringify(bbb)}
+				rows={JSON.stringify(procentLed, undefined, 2).split("\n").length}
+				value={JSON.stringify(procent, undefined, 2)}
+				onChange={handleMessageChange}
 			/>
 			<div>
 				<pre>
