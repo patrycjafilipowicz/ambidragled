@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 const ledHeight = 30;
 const ledWidth = 50;
 const border = 10;
@@ -37,7 +37,7 @@ function App() {
 		},
 	]);
 
-	const ledMapper = (led, index) => {
+	const ledMapper = useCallback((led, index) => {
 		return {
 			group: 0,
 			hmax: led.y / screenDimensions.height,
@@ -45,12 +45,13 @@ function App() {
 			vmax: (led.x + led.width) / screenDimensions.width,
 			vmin: led.x / screenDimensions.width,
 		};
-	};
-	const procentLed = leds.map(ledMapper);
+	}, [screenDimensions.height, screenDimensions.width]);
+
+	const stableProcentLed = useMemo(() => leds.map(ledMapper), [leds, ledMapper]);
 
 	useEffect(() => {
-		setProcent(procentLed);
-	}, [procentLed]);
+		setProcent(stableProcentLed);
+	}, [stableProcentLed]);
 
 	const handleMessageChange = event => {
 		console.log(event.target.value);
@@ -271,7 +272,7 @@ function App() {
 			<br></br>
 
 			<textarea
-				rows={JSON.stringify(procentLed, undefined, 2).split("\n").length}
+				rows={JSON.stringify(procent, undefined, 2).split("\n").length}
 				value={JSON.stringify(procent, undefined, 2)}
 				onChange={handleMessageChange}
 			/>
