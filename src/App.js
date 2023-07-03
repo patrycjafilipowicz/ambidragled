@@ -1,5 +1,11 @@
 import "./App.css";
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import React, {
+	useState,
+	useEffect,
+	useRef,
+	useMemo,
+	useCallback,
+} from "react";
 const ledHeight = 30;
 const ledWidth = 50;
 const border = 10;
@@ -37,25 +43,55 @@ function App() {
 		},
 	]);
 
-	const ledMapper = useCallback((led, index) => {
-		return {
-			group: 0,
-			hmax: led.y / screenDimensions.height,
-			hmin: (led.y + led.height) / screenDimensions.height,
-			vmax: (led.x + led.width) / screenDimensions.width,
-			vmin: led.x / screenDimensions.width,
-		};
-	}, [screenDimensions.height, screenDimensions.width]);
+	const ledMapper = useCallback(
+		(led, index) => {
+			return {
+				group: 0,
+				//hmax: (led.y + led.height) / screenDimensions.height,
+				//hmin: led.y / screenDimensions.height,
+				hmax: (led.x + led.width) / screenDimensions.width,
+				hmin: led.x / screenDimensions.width,
+				vmin: (screenDimensions.height - led.y) / screenDimensions.height,
+				vmax:
+					(screenDimensions.height - led.y - led.height) /
+					screenDimensions.height,
+			};
+		},
+		[screenDimensions.height, screenDimensions.width]
+	);
 
-	const stableProcentLed = useMemo(() => leds.map(ledMapper), [leds, ledMapper]);
+	const procentLedToLedMapper = useCallback(
+		(led, index) => {
+			const y = led.vmin * screenDimensions.height - screenDimensions.height;
+			const x = led.hmin * screenDimensions.width;
+			return {
+				y: y,
+				height:
+					y - screenDimensions.height + led.vmax * screenDimensions.height,
+				width: led.hmax * screenDimensions.width - x,
+				x: x,
+			};
+		},
+		[screenDimensions.height, screenDimensions.width]
+	);
+
+	const stableProcentLed = useMemo(
+		() => leds.map(ledMapper),
+		[leds, ledMapper]
+	);
 
 	useEffect(() => {
 		setProcent(stableProcentLed);
 	}, [stableProcentLed]);
 
 	const handleMessageChange = event => {
-		console.log(event.target.value);
-		setProcent(JSON.parse(event.target.value));
+		try {
+			console.log(event.target.value);
+			const userData = JSON.parse(event.target.value);
+			setLeds(userData.map(procentLedToLedMapper));
+		} catch (err) {
+			alert(err);
+		}
 	};
 
 	useEffect(() => {
