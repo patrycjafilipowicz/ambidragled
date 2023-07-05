@@ -47,12 +47,10 @@ function App() {
 		(led, index) => {
 			return {
 				group: 0,
-				//hmax: (led.y + led.height) / screenDimensions.height,
-				//hmin: led.y / screenDimensions.height,
 				hmax: (led.x + led.width) / screenDimensions.width,
 				hmin: led.x / screenDimensions.width,
-				vmin: (screenDimensions.height - led.y) / screenDimensions.height,
-				vmax:
+				vmax: (screenDimensions.height - led.y) / screenDimensions.height,
+				vmin:
 					(screenDimensions.height - led.y - led.height) /
 					screenDimensions.height,
 			};
@@ -62,12 +60,11 @@ function App() {
 
 	const procentLedToLedMapper = useCallback(
 		(led, index) => {
-			const y = led.vmin * screenDimensions.height - screenDimensions.height;
+			const y = screenDimensions.height - led.vmax * screenDimensions.height;
 			const x = led.hmin * screenDimensions.width;
 			return {
 				y: y,
-				height:
-					y - screenDimensions.height + led.vmax * screenDimensions.height,
+				height: screenDimensions.height - y - (led.vmin * screenDimensions.height),
 				width: led.hmax * screenDimensions.width - x,
 				x: x,
 			};
@@ -86,7 +83,6 @@ function App() {
 
 	const handleMessageChange = event => {
 		try {
-			console.log(event.target.value);
 			const userData = JSON.parse(event.target.value);
 			setLeds(userData.map(procentLedToLedMapper));
 		} catch (err) {
