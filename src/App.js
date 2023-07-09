@@ -60,7 +60,7 @@ function App() {
 
 	const procentLedToLedMapper = useCallback(
 		(led, index) => {
-			const y = screenDimensions.height - led.vmax * screenDimensions.height;
+			const y = led.vmax * screenDimensions.height;
 			const x = led.hmin * screenDimensions.width;
 			return {
 				y: y,
