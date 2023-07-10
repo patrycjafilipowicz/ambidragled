@@ -49,10 +49,8 @@ function App() {
 				group: 0,
 				hmax: (led.x + led.width) / screenDimensions.width,
 				hmin: led.x / screenDimensions.width,
-				vmax: (screenDimensions.height - led.y) / screenDimensions.height,
-				vmin:
-					(screenDimensions.height - led.y - led.height) /
-					screenDimensions.height,
+				vmax: (led.height + led.y) / screenDimensions.height,
+				vmin: led.y/screenDimensions.height,
 			};
 		},
 		[screenDimensions.height, screenDimensions.width]
@@ -60,11 +58,11 @@ function App() {
 
 	const procentLedToLedMapper = useCallback(
 		(led, index) => {
-			const y = led.vmax * screenDimensions.height;
+			const y = led.vmin * screenDimensions.height;
 			const x = led.hmin * screenDimensions.width;
 			return {
 				y: y,
-				height: screenDimensions.height - y - (led.vmin * screenDimensions.height),
+				height: (led.vmax * screenDimensions.height) - y,
 				width: led.hmax * screenDimensions.width - x,
 				x: x,
 			};
